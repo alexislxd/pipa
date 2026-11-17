@@ -775,9 +775,23 @@
     setTimeout(showNotif, 1800);
     setInterval(showNotif, 8500);
 
+    // Repassa os parametros do anuncio (utm_*, fbclid, src, sck etc.) para o checkout
+    function withParams(url) {
+      try {
+        var u = new URL(url);
+        new URLSearchParams(window.location.search).forEach(function (v, k) {
+          if (!u.searchParams.has(k)) u.searchParams.set(k, v);
+        });
+        return u.toString();
+      } catch (err) { return url; }
+    }
+    document.querySelectorAll('a[href*="pay.wiapy.com"]').forEach(function (a) {
+      a.href = withParams(a.href);
+    });
+
     function goPay(e) {
       e.preventDefault();
-      window.location.href = "https://pay.wiapy.com/7jfZ_wVRll-J";
+      window.location.href = withParams("https://pay.wiapy.com/7jfZ_wVRll-J");
     }
     document.getElementById('cta-main').addEventListener('click', goPay);
     document.getElementById('cta-final').addEventListener('click', goPay);
@@ -847,7 +861,7 @@
       document.getElementById('exitNo')?.addEventListener('click', hideExit);
 
       document.getElementById('exitCta')?.addEventListener('click', function() {
-        window.location.href = "https://pay.wiapy.com/nJtSuZsZ5_m";
+        window.location.href = withParams("https://pay.wiapy.com/nJtSuZsZ5_m");
       });
     })();
   </script>
